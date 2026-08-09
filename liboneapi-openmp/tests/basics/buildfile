@@ -2,7 +2,7 @@ import libs = liboneapi-openmp%libs{openmp}
 
 # __kmpc_fork_call (emitted for #pragma omp parallel) is only in libiomp5md,
 # not in the stubs lib. The flag below ensures the compiler emits it.
-if ($cxx.target.system == 'win32-msvc')
+if ($cxx.class == 'msvc')
   cxx.coptions += /openmp:llvm
 else
   cxx.coptions += -fopenmp
