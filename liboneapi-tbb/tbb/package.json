@@ -1,58 +1,47 @@
 {
   "x86_64-windows": {
     "tbb": {
-      "libs": ["tbb-runtime/bin/tbb12.dll"],
-      "libi": [
-        "tbb-runtime/lib/tbb12.lib",
-        "tbb-runtime/lib/tbb.lib"],
-      "depends": []
+      "linked": [
+        { "dll": "tbb-runtime/bin/tbb12.dll", "libs": ["tbb-runtime/lib/tbb12.lib", "tbb-runtime/lib/tbb.lib"] }
+      ]
     },
     "tbb-malloc": {
-      "libs": ["tbb-runtime/bin/tbbmalloc.dll"],
-      "libi": ["tbb-runtime/lib/tbbmalloc.lib"],
-      "depends": []
+      "linked": [
+        { "dll": "tbb-runtime/bin/tbbmalloc.dll", "libs": ["tbb-runtime/lib/tbbmalloc.lib"] }
+      ]
     },
     "tbb-malloc-proxy": {
-      "libs": [
-        "tbb-runtime/bin/tbbmalloc_proxy.dll"
-      ],
-      "libi": [
-        "tbb-devel/lib/tbbmalloc_proxy.lib"
+      "linked": [
+        { "dll": "tbb-runtime/bin/tbbmalloc_proxy.dll", "libs": ["tbb-devel/lib/tbbmalloc_proxy.lib"] }
       ],
       "depends": ["tbb-malloc"]
     },
     "tbb-bind": {
-      "libs": [
-        "tbb-runtime/bin/tbbbind.dll",
-        "tbb-runtime/bin/tbbbind_2_0.dll",
-        "tbb-runtime/bin/tbbbind_2_5.dll"],
-      "libi": [
-        "tbb-devel/lib/tbbbind.lib",
-        "tbb-devel/lib/tbbbind_2_0.lib",
-        "tbb-devel/lib/tbbbind_2_5.lib"],
-      "depends": []
+      "linked": [
+        { "dll": "tbb-runtime/bin/tbbbind.dll",     "libs": ["tbb-devel/lib/tbbbind.lib"] },
+        { "dll": "tbb-runtime/bin/tbbbind_2_0.dll", "libs": ["tbb-devel/lib/tbbbind_2_0.lib"] },
+        { "dll": "tbb-runtime/bin/tbbbind_2_5.dll", "libs": ["tbb-devel/lib/tbbbind_2_5.lib"] }
+      ]
     }
   },
 
   "x86_64-linux": {
     "tbb": {
-      "libs": ["tbb-runtime/lib/libtbb.so"],
-      "depends": []
+      "shared": ["tbb-runtime/lib/libtbb.so"]
     },
     "tbb-malloc": {
-      "libs": ["tbb-runtime/lib/libtbbmalloc.so"],
-      "depends": []
+      "shared": ["tbb-runtime/lib/libtbbmalloc.so"]
     },
     "tbb-malloc-proxy": {
-      "libs": ["tbb-runtime/lib/libtbbmalloc_proxy.so"],
+      "shared": ["tbb-runtime/lib/libtbbmalloc_proxy.so"],
       "depends": ["tbb-malloc"]
     },
     "tbb-bind": {
-      "libs": [
+      "shared": [
         "tbb-runtime/lib/libtbbbind.so",
         "tbb-runtime/lib/libtbbbind_2_0.so",
-        "tbb-runtime/lib/libtbbbind_2_5.so"],
-      "depends": []
+        "tbb-runtime/lib/libtbbbind_2_5.so"
+      ]
     }
   }
 }
