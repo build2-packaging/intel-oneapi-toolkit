@@ -1,0 +1,6 @@
+$out_root/
+{
+  include dpcpp/
+}
+
+export $out_root/dpcpp/$import.target

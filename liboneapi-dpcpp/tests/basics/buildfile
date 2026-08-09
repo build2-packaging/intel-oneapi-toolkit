@@ -1,0 +1,3 @@
+import libs = liboneapi-dpcpp%lib{oneapi-dpcpp}
+
+exe{driver}: {hxx ixx txx cxx}{**} $libs testscript{**}
