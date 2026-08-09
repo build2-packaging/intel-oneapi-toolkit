@@ -1,26 +1,26 @@
 {
-  "x86_64-windows": {
-    "ifort": {
-      "libs": [
-        "ifort-devel/bin/libifcoremd.dll",
-        "ifort-devel/bin/libifportmd.dll"
-      ],
-      "libi": [
-        "ifort-devel/lib/libifportmd.lib"
-      ],
-      "liba": [
-        "ifort-devel/lib/libifcoremd.lib"
-      ]
-    }
-  },
-
-  "x86_64-linux": {
-    "ifort": {
-      "libs": [
-        "ifort-devel/lib/libifcore.so",
-        "ifort-devel/lib/libifcoremt.so",
-        "ifort-devel/lib/libifport.so"
-      ]
+  "platforms": {
+    "x86_64-windows": {
+      "ifort": {
+        "linked": [
+          { "dll": "ifort-devel/bin/libifportmd.dll", "libs": ["ifort-devel/lib/libifportmd.lib"] }
+        ],
+        "shared": [
+          "ifort-devel/bin/libifcoremd.dll"
+        ],
+        "archives": [
+          "ifort-devel/lib/libifcoremd.lib"
+        ]
+      }
+    },
+    "x86_64-linux": {
+      "ifort": {
+        "shared": [
+          "ifort-devel/lib/libifcore.so",
+          "ifort-devel/lib/libifcoremt.so",
+          "ifort-devel/lib/libifport.so"
+        ]
+      }
     }
   },
   "exes": {
