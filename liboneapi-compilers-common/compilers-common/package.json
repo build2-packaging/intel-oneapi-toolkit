@@ -1,19 +1,14 @@
 {
   "x86_64-windows": {
     "compilers-common": {
-      "libs": [
-        "compilers-common-runtime/bin/libmmd.dll",
-        "compilers-common-runtime/bin/svml_dispmd.dll",
-        "compilers-common-runtime/bin/libirngmd.dll"
-      ],
-      "libi": [
-        "compilers-common-devel/lib/libmmd.lib",
-        "compilers-common-devel/lib/svml_dispmd.lib",
-        "compilers-common-devel/lib/libirngmd.lib"
+      "linked": [
+        { "dll": "compilers-common-runtime/bin/libmmd.dll",      "libs": ["compilers-common-devel/lib/libmmd.lib"] },
+        { "dll": "compilers-common-runtime/bin/svml_dispmd.dll", "libs": ["compilers-common-devel/lib/svml_dispmd.lib"] },
+        { "dll": "compilers-common-runtime/bin/libirngmd.dll",   "libs": ["compilers-common-devel/lib/libirngmd.lib"] }
       ]
     },
     "compilers-common-icx": {
-      "liba": [
+      "archives": [
         "compilers-common-devel/lib/libbfp754.lib",
         "compilers-common-devel/lib/libdecimal.lib",
         "compilers-common-devel/lib/libicaio.lib",
@@ -30,42 +25,35 @@
       ]
     },
     "compilers-common-xpti": {
-      "libs": [
-        "compilers-common-runtime/bin/xptifw.dll"
+      "linked": [
+        { "dll": "compilers-common-runtime/bin/xptifw.dll", "libs": ["compilers-common-devel/lib/xptifw.lib"] }
       ],
-      "libi": [
-        "compilers-common-devel/lib/xptifw.lib"
-      ],
-      "liba": [
+      "archives": [
         "compilers-common-devel/lib/xpti.lib"
       ],
       "depends": ["compilers-common"]
     },
     "compilers-common-ur": {
-      "libs": [
-        "compilers-common-runtime/bin/ur_loader.dll",
+      "linked": [
+        { "dll": "compilers-common-runtime/bin/ur_loader.dll", "libs": ["compilers-common-devel/lib/ur_loader.lib"] }
+      ],
+      "shared": [
         "compilers-common-runtime/bin/ur_adapter_level_zero.dll",
         "compilers-common-runtime/bin/ur_adapter_level_zero_v2.dll",
         "compilers-common-runtime/bin/ur_adapter_opencl.dll"
       ],
-      "libi": [
-        "compilers-common-devel/lib/ur_loader.lib"
-      ],
       "depends": ["compilers-common"]
     },
     "compilers-common-malloc": {
-      "libs": [
-        "compilers-common-runtime/bin/qkmalloc.dll"
-      ],
-      "libi": [
-        "compilers-common-devel/lib/qkmalloc.lib"
+      "linked": [
+        { "dll": "compilers-common-runtime/bin/qkmalloc.dll", "libs": ["compilers-common-devel/lib/qkmalloc.lib"] }
       ]
     }
   },
 
   "x86_64-linux": {
     "compilers-common": {
-      "libs": [
+      "shared": [
         "compilers-common-runtime/lib/libimf.so",
         "compilers-common-runtime/lib/libsvml.so",
         "compilers-common-runtime/lib/libirng.so",
@@ -74,7 +62,7 @@
       ]
     },
     "compilers-common-icx": {
-      "liba": [
+      "archives": [
         "compilers-common-devel/lib/libbfp754.a",
         "compilers-common-devel/lib/libdecimal.a",
         "compilers-common-devel/lib/libimf.a",
@@ -88,12 +76,12 @@
       ]
     },
     "compilers-common-xpti": {
-      "libs": ["compilers-common-runtime/lib/libxptifw.so"],
-      "liba": ["compilers-common-devel/lib/libxpti.a"],
+      "shared": ["compilers-common-runtime/lib/libxptifw.so"],
+      "archives": ["compilers-common-devel/lib/libxpti.a"],
       "depends": ["compilers-common"]
     },
     "compilers-common-malloc": {
-      "libs": ["compilers-common-runtime/lib/libqkmalloc.so"],
+      "shared": ["compilers-common-runtime/lib/libqkmalloc.so"],
       "depends": ["compilers-common"]
     }
   }
