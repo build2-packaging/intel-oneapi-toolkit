@@ -1,3 +1,29 @@
-import libs = liboneapi-dpcpp%lib{oneapi-dpcpp}
+import libs = liboneapi-dpcpp%lib{dpcpp}
+import! icx  = liboneapi-dpcpp%exe{icx}
+import! icpx = liboneapi-dpcpp%exe{icpx}
 
-exe{driver}: {hxx ixx txx cxx}{**} $libs testscript{**}
+# Host compile test: proves lib{dpcpp}'s exported poptions (-I paths) make
+# omp.h discoverable to this test config's own configured compiler, which is
+# independent of icx/icpx.
+#
+./: exe{test-dpcpp}: cxx{omp-include} $libs
+
+# icx/icpx are opaque prebuilt tools, invoked directly in the testscript
+# below (not compiled/linked by build2's own cxx rule). c{}/cc{} are passive
+# file types (build2 has no native rule for them), same trick as
+# liboneapi-ifort's f90{} for hello.f90.
+#
+define c: file
+c{*}: extension = c
+
+define cc: file
+cc{*}: extension = cpp
+
+./: $icx $icpx c{hello} cc{openmp} testscript
+{
+  icx    = $icx
+  icpx   = $icpx
+  hello  = c{hello}
+  openmp = cc{openmp}
+  test   = true
+}

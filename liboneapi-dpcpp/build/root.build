@@ -4,12 +4,16 @@
 
 cxx.std = latest
 
+using c
 using cxx
 
-hxx{*}: extension = hxx
-ixx{*}: extension = ixx
-txx{*}: extension = txx
-cxx{*}: extension = cxx
+h{*}:   extension = h
+c{*}:   extension = c
+hxx{*}: extension = hpp
+cxx{*}: extension = cpp
+
+config [dir_path] config.liboneapi_dpcpp.cache ?= \
+  (!$null($config.liboneapi.cache) ? $config.liboneapi.cache : $out_root)
 
 # The test target for cross-testing (running tests under Wine, etc).
 #

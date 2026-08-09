@@ -27,6 +27,8 @@
 *.exe.manifest
 *.pc
 
+dpcpp/dpcpp-devel/
+
 # Compilation database.
 #
 compile_commands.json

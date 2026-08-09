@@ -19,9 +19,10 @@ Currently packaged:
 - Fortran compiler runtime (ifort/ifx)
 - Compiler common runtime (libimf, libsvml, libintlc, xpti, qkmalloc)
 - MPI Library
+- DPC++/C++ Compiler (icx/icpx, host compilation)
 
 Not yet packaged:
-- DPC++/C++ Compiler + runtime
+- DPC++/SYCL offload runtime (libsycl, libur_loader)
 - IPP (Integrated Performance Primitives)
 - VTune Profiler
 

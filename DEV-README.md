@@ -3,6 +3,7 @@
 ## Packages
 
   [liboneapi-compilers-common/DEV-README.md](liboneapi-compilers-common/DEV-README.md) - Compiler common runtime (libimf, libsvml, libintlc)
+  [liboneapi-dpcpp/DEV-README.md](liboneapi-dpcpp/DEV-README.md)                     - DPC++/C++ compiler (icx/icpx), headers
   [liboneapi-mkl/DEV-README.md](liboneapi-mkl/DEV-README.md)                         - MKL targets, layout, platform notes
   [liboneapi-openmp/DEV-README.md](liboneapi-openmp/DEV-README.md)                   - OpenMP targets, layout, platform notes
   [liboneapi-tbb/DEV-README.md](liboneapi-tbb/DEV-README.md)                         - TBB targets, layout, platform notes
@@ -38,6 +39,7 @@
   tbb                 intel.oneapi.lin.tbb_oneapi.content  intel.oneapi.win.tbb_oneapi.content
   openmp              intel.oneapi.lin.compiler.content    intel.oneapi.win.compiler.content
   compilers-common    intel.oneapi.lin.compiler.content     intel.oneapi.win.compiler.content
+  dpcpp               intel.oneapi.lin.compiler.content     intel.oneapi.win.compiler.content
 
 (*) oneDNN is open source (Apache-2.0). Upstream: https://github.com/uxlfoundation/oneDNN
     Not packaged here; consider building from source rather than wrapping Intel's binary.
@@ -137,6 +139,7 @@ the relevant version+build strings. Update the `version` field in each
   liboneapi-openmp         intel.oneapi.win.openmp                     intel.oneapi.lin.openmp
   liboneapi-compilers-     intel.oneapi.win.compilers-common           intel.oneapi.lin.compilers-common
     common                 intel.oneapi.win.compilers-common-runtime   intel.oneapi.lin.compilers-common.runtime
+  liboneapi-dpcpp          intel.oneapi.win.cpp-dpcpp-common           intel.oneapi.lin.dpcpp-cpp-common
 
 Note: `compilers-common` uses a hyphen before `runtime` on Windows
 (`compilers-common-runtime`) but a dot on Linux (`compilers-common.runtime`).

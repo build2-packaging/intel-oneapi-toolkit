@@ -1,41 +1,273 @@
-intf_libs = # Interface dependencies.
-impl_libs = # Implementation dependencies.
-#import xxxx_libs += libhello%lib{hello}
+# Note: unlike other packages, this one does not import/export
+# liboneapi-compilers-common's libs here. lib{dpcpp} is a binless,
+# headers-only interface library; icx/icpx needing compilers-common's
+# runtime libs (libimf, libsvml, libintlc) to *run* is a concern of the
+# extracted exe{} binaries at execution time (see the bdep manifest
+# `depends`), not of C++ consumers linking against these headers.
 
-lib{oneapi-dpcpp}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+define [see_through] import: group
 
-# Build options.
-#
-cxx.poptions =+ "-I$out_root" "-I$src_root"
+name = $string.replace($project, 'liboneapi-', '')
 
-#obja{*}: cxx.poptions += -DDPCPP_STATIC_BUILD
-#objs{*}: cxx.poptions += -DDPCPP_SHARED_BUILD
+source redist.build
 
-# Export options.
-#
-lib{oneapi-dpcpp}:
+json{$name-manifest}: $src_root/manifest manifest.json
+
+manifest_json = [json_object] $json.load($src_base/manifest.json)
+
+package_ver = "$(version.major).$(version.minor).$(version.patch)"
+
+for plat: [json_object] ($manifest_json["$project"])
 {
-  cxx.export.poptions = "-I$out_root" "-I$src_root"
-  cxx.export.libs = $intf_libs
+  plat_key   = $member_name($plat)
+  plat_val   = $member_value($plat)
+  enabled    = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+  devel_id   = [string] ($plat_val["devel_id"])
+
+  json{$devel_id...}:   json{$name-manifest}: include = (!$empty($devel_id))
+  archive{$name-intel.oneapi.$(name).devel-$package_ver...}: json{$devel_id...}: include = (!$empty($devel_id) && $enabled)
 }
 
-#liba{oneapi-dpcpp}: cxx.export.poptions += -DDPCPP_STATIC
-#libs{oneapi-dpcpp}: cxx.export.poptions += -DDPCPP_SHARED
+extract{$name-devel}: archive{$name-intel.oneapi.$(name).devel-$package_ver...}
 
-# For pre-releases use the complete version to make sure they cannot
-# be used in place of another pre-release or the final version. See
-# the version module for details on the version.* variable values.
-#
-if $version.pre_release
-  lib{oneapi-dpcpp}: bin.lib.version = "-$version.project_id"
-else
-  lib{oneapi-dpcpp}: bin.lib.version = "-$version.major.$version.minor"
+import{$name-legals}: extract{$name-devel}: update = match
 
-# Install into the dpcpp/ subdirectory of, say, /usr/include/
-# recreating subdirectories.
+import{$name-legals}:
+{{
+  o = $directory($>[0])
+  d = $o/$name($>[0]).files
+
+  files = [paths]
+  for g : $filter($<, group)
+    if test -d $o/$name($g)/share/doc/compiler/licensing
+      find "$o/$name($g)/share/doc/compiler/licensing" -type f -name "*" \
+        | set -n f [paths]
+      files += $f
+    end
+  end
+
+  depdb dyndep \
+    --dyn-target \
+    --target-cwd "$o" \
+    --target-what 'imported legals' \
+    --target-default-type 'legal' \
+    --target-extension-type '=legal' \
+    --format lines \
+    --file $d \
+    -- \
+      echo $regex.merge($files, '(.+)', '\1\n') >$d
+
+  diag import $>
+
+  for t : $filter_out($>, group)
+    touch $path($t)
+  end
+}}
+
+import{$name-cfgs}: extract{$name-devel}: update = match
+
+import{$name-cfgs}:
+{{
+  o = $directory($>[0])
+  d = $o/$name($>[0]).files
+
+  depdb dyndep \
+    --dyn-target \
+    --target-cwd "$o" \
+    --target-what 'imported configs' \
+    --target-default-type 'cfg' \
+    --target-extension-type 'cfg=cfg' \
+    --format lines \
+    --file $d \
+    -- \
+      echo $name-devel/bin/icpx.cfg >$d
+
+  diag import $>
+
+  for t : $filter_out($>, group)
+    touch $path($t)
+  end
+}}
+
+# omp.h, mathimf.h, and other host C/C++ headers live under
+# opt/compiler/include/; the SYCL/CL/unified-runtime headers live under the
+# top-level include/. Both are exported so consumers can use either.
 #
-{hxx ixx txx}{*}:
+import{$name-includes}: extract{$name-devel}: update = match
+
+import{$name-includes}:
+{{
+  o = $directory($>[0])
+  d = $o/$name($>[0]).files
+
+  files = [paths]
+  for g : $filter($<, group)
+    for sub: "opt/compiler/include" "include"
+      if test -d $o/$name($g)/$sub
+        find "$o/$name($g)/$sub" -type f \
+          | sed -n -e 's/^(.+\.(h|hpp))$/\1/p' \
+          | set -n f [paths]
+        files += $f
+      end
+    end
+  end
+
+  depdb dyndep \
+    --dyn-target \
+    --target-cwd "$o" \
+    --target-what 'imported includes' \
+    --target-extension-type 'h=h' \
+    --target-extension-type 'hpp=hxx' \
+    --format lines \
+    --file $d \
+    -- \
+      echo $regex.merge($files, '(.+)', '\1\n') >$d
+
+  diag import $>
+
+  for t : $filter_out($>, group)
+    touch $path($t)
+  end
+}}
+
+pub_hdrs = [strings] \
+  "-I$out_base/$name-devel/opt/compiler/include" \
+  "-I$out_base/$name-devel/include"
+
+./: json{package}
+json = [json_object] $json.load($src_base/package.json)
+for plat: [json_object] ($json["platforms"])
 {
-  install         = include/dpcpp/
+  plat_key = $member_name($plat)
+  enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+
+  for m: [json_object] ($member_value($plat))
+  {
+    n = $member_name($m)
+    v = $member_value($m)
+
+    # This member (dpcpp) is binless: no linked/shared/archives entries in
+    # package.json, it only carries the exported include paths below. Use
+    # lib{} (not libs{}) since there is no shared-library file backing it.
+    #
+    ./: lib{$n}:
+    {
+      include = $enabled
+      clean = false
+    }
+
+    # rule_hint is required: this lib{} has no direct source or header
+    # prerequisites (they come indirectly, via the import{} dyndep groups
+    # below), so build2 cannot otherwise infer which link rule governs it
+    # -- the same requirement as a "metadata library" with no sources.
+    #
+    [rule_hint=cxx] \
+    lib{$n}: import{$name-legals} import{$name-includes}: \
+                extract{$name-devel}:
+    {
+      include = $enabled
+    }
+
+    # Inter-dependencies
+    #
+    for d: [json_array] ($v["depends"])
+    {
+      dep = [name] $d
+      lib{$n}: lib{$dep}: include = $enabled
+      if $enabled
+      {
+        lib{$n}: cc.export.libs += lib{$dep}
+      }
+    }
+
+    # Export options.
+    #
+    lib{$n}:
+    {
+      cc.type            = cc
+      cc.export.poptions = $pub_hdrs
+    }
+  }
+}
+
+# Compiler executables declared in package.json.
+#
+for plat: [json_object] ($json["exes"])
+{
+  plat_key = $member_name($plat)
+  enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+
+  for m: [json_object] ($member_value($plat))
+  {
+    p = $member_value($m)
+    if ($cc.target.class == 'windows')
+      p = "$(p).exe"
+
+    ./: exe{$p}: include = $enabled
+    <exe{$p}>: import{$name-cfgs}: extract{$name-devel}: include = $enabled
+
+    # Intel's installer normally runs a post-install linking_tool.sh step
+    # that renames URL-encoded archive entries and creates the bin/clang++
+    # sibling that icx/icpx locate relative to themselves at runtime
+    # ("error #10408: The Intel LLVM Based compiler cannot be found").
+    # bsdtar extraction alone does not run that step, so recreate the one
+    # entry icx/icpx actually need.
+    #
+    # Linux: archive has bin/compiler/clang%2B%2B; create bin/clang++ as a
+    # relative symlink to compiler/clang.
+    # Windows: archive has bin/compiler/clang%2B%2B.exe; copy it into bin/
+    # as clang++.exe (symlinks require elevation on Windows).
+    # The target declarations stay unconditional (config-independent build
+    # graph); only the recipe bodies are platform-gated.
+    #
+    <exe{$p}>: $name-devel/bin/file{clang++}:     include = ($enabled && $cc.target.class == 'linux')
+    <exe{$p}>: $name-devel/bin/file{clang++.exe}: include = ($enabled && $cc.target.class == 'windows')
+  }
+}
+
+$name-devel/bin/file{clang++}: extract{$name-devel}
+%
+if ($cc.target.class == 'linux')
+{{
+  diag ln $>
+  rm -f $path($>)
+  ln --no-cleanup -s compiler/clang $path($>)
+}}
+
+$name-devel/bin/file{clang++.exe}: extract{$name-devel}
+%
+if ($cc.target.class == 'windows')
+{{
+  diag cp $>
+  cp $out_base/$name-devel/bin/compiler/clang%2B%2B.exe $path($>)
+}}
+
+# No registered rule matches a pre-built exe that has no source prerequisites
+# and does not yet exist on disk. This ad-hoc regex pattern rule provides an
+# explicit perform(update)/perform(clean) entry point for all path-qualified
+# exe targets so build2 can attach the operation to them.
+#
+exe{~'/(.+)/'}: $name-devel/fsdir{bin} extract{$name-devel}
+{{
+  diag import $> $<
+  touch $path($>)
+}}
+
+# icpx.cfg is read at startup from the same directory as icpx.
+cfg{*}: install = bin/
+
+# Recreate the upstream include/ hierarchy under, e.g., /usr/include/.
+# Path qualification is required here to anchor the install at the actual
+# extracted subdirectory rather than the full out-relative path.
+#
+$name-devel/opt/compiler/include/{h hxx}{*}:
+{
+  install         = include/
+  install.subdirs = true
+}
+
+$name-devel/include/{h hxx}{*}:
+{
+  install         = include/
   install.subdirs = true
 }

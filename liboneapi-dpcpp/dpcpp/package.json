@@ -1,0 +1,20 @@
+{
+  "platforms":
+  {
+    "x86_64-windows": { "dpcpp": {} },
+    "x86_64-linux":   { "dpcpp": {} }
+  },
+  "exes":
+  {
+    "x86_64-windows":
+    {
+      "icx":  "dpcpp-devel/bin/icx",
+      "icpx": "dpcpp-devel/bin/icpx"
+    },
+    "x86_64-linux":
+    {
+      "icx":  "dpcpp-devel/bin/icx",
+      "icpx": "dpcpp-devel/bin/icpx"
+    }
+  }
+}

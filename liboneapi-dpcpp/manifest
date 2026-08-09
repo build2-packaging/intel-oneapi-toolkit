@@ -1,14 +1,16 @@
 : 1
 name: liboneapi-dpcpp
-version: 0.1.0-a.0.z
+version: 2026.0.0
+upstream-version: 2026.0.0
 language: c++
-project: build2-oneapi
-summary: oneapi-dpcpp C++ library
-license: other: proprietary ; Not free/open source.
-package-description-file: PACKAGE-README.md
-url: https://example.org/upstream
-email: upstream@example.org
-package-url: https://github.com/build2-packaging/build2-oneapi
+project: intel-oneapi-toolkit
+summary: Intel DPC++/C++ Compiler (icx/icpx) and headers
+license: other: Intel End User License Agreement for Developer Tools ; Not free/open source.
+description-file: README.md
+url: https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compiler.html
+package-url: https://github.com/build2-packaging/intel-oneapi-toolkit
 package-email: packaging@build2.org ; Mailing list.
-depends: * build2 >= 0.18.0
-depends: * bpkg >= 0.18.0
+builds: none; Times out downloading large binaries
+depends: * build2 >= 0.17.0
+depends: * bpkg >= 0.17.0
+depends: liboneapi-compilers-common ^ 2026.0.0
