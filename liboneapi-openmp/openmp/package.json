@@ -1,34 +1,31 @@
 {
   "x86_64-windows": {
     "openmp": {
-      "libs": [
-        "openmp-runtime/bin/libiomp5md.dll",
-        "openmp-runtime/bin/libiompstubs5md.dll"
-      ],
-      "libi": [
-        "openmp-runtime/lib/libiomp5md.lib",
-        "openmp-runtime/lib/libiompstubs5md.lib"
+      "linked": [
+        { "dll": "openmp-runtime/bin/libiomp5md.dll",      "libs": ["openmp-runtime/lib/libiomp5md.lib"] },
+        { "dll": "openmp-runtime/bin/libiompstubs5md.dll", "libs": ["openmp-runtime/lib/libiompstubs5md.lib"] }
       ]
     },
     "openmp-omptarget": {
-      "libs": [
-        "openmp-runtime/bin/omptarget.dll",
+      "linked": [
+        { "dll": "openmp-runtime/bin/omptarget.dll", "libs": ["openmp-runtime/lib/omptarget.lib"] }
+      ],
+      "shared": [
         "openmp-runtime/bin/omptarget.sycl.wrap.dll"
       ],
-      "libi": [ "openmp-runtime/lib/omptarget.lib" ],
       "depends": ["openmp"]
     }
   },
 
   "x86_64-linux": {
     "openmp": {
-      "libs": [
+      "shared": [
         "openmp-runtime/lib/libiomp5.so",
         "openmp-runtime/lib/libiompstubs5.so"
       ]
     },
     "openmp-omptarget": {
-      "libs": [
+      "shared": [
         "openmp-runtime/lib/libomptarget.so",
         "openmp-runtime/lib/libomptarget.sycl.wrap.so"
       ],
