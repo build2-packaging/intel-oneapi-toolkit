@@ -1,8 +1,9 @@
 {
   "x86_64-windows": {
     "mkl": {
-      "libs": ["mkl-runtime/bin/mkl_rt.3.dll"],
-      "libi": ["mkl-devel/lib/mkl_rt.lib"],
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_rt.3.dll", "libs": ["mkl-devel/lib/mkl_rt.lib"] }
+      ],
       "depends": [
         "mkl-core",
         "mkl-dispatch",
@@ -12,21 +13,17 @@
       ]
     },
     "mkl-core": {
-      "libs": [
-        "mkl-runtime/bin/mkl_core.3.dll",
-        "mkl-runtime/bin/mkl_cdft_core.2.dll"],
-      "libi": [
-        "mkl-devel/lib/mkl_core_dll.lib",
-        "mkl-devel/lib/mkl_cdft_core_dll.lib"],
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_core.3.dll",      "libs": ["mkl-devel/lib/mkl_core_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_cdft_core.2.dll", "libs": ["mkl-devel/lib/mkl_cdft_core_dll.lib"] }
+      ],
       "depends": ["mkl-dispatch"]
     },
     "mkl-imalloc": {
-      "libs": ["mkl-runtime/bin/libimalloc.dll"],
-      "libi": [],
-      "depends": []
+      "shared": ["mkl-runtime/bin/libimalloc.dll"]
     },
     "mkl-dispatch": {
-      "libs": [
+      "shared": [
         "mkl-runtime/bin/mkl_avx2.3.dll",
         "mkl-runtime/bin/mkl_avx512.3.dll",
         "mkl-runtime/bin/mkl_avx10.3.dll",
@@ -38,109 +35,90 @@
         "mkl-runtime/bin/mkl_vml_def.3.dll",
         "mkl-runtime/bin/mkl_vml_mc3.3.dll",
         "mkl-runtime/bin/mkl_vml_cmpt.3.dll"
-      ],
-      "libi": [],
-      "depends": []
+      ]
     },
     "mkl-lp64": {
-      "liba": ["mkl-devel/lib/mkl_intel_lp64_dll.lib"],
-      "depends": []
+      "archives": ["mkl-devel/lib/mkl_intel_lp64_dll.lib"]
     },
     "mkl-ilp64": {
-      "liba": ["mkl-devel/lib/mkl_intel_ilp64_dll.lib"],
-      "depends": []
+      "archives": ["mkl-devel/lib/mkl_intel_ilp64_dll.lib"]
     },
     "mkl-thread-seq": {
-      "libs": ["mkl-runtime/bin/mkl_sequential.3.dll"],
-      "libi": ["mkl-devel/lib/mkl_sequential_dll.lib"],
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_sequential.3.dll", "libs": ["mkl-devel/lib/mkl_sequential_dll.lib"] }
+      ],
       "depends": ["mkl-core"]
     },
     "mkl-thread-intel": {
-      "libs": ["mkl-runtime/bin/mkl_intel_thread.3.dll"],
-      "libi": ["mkl-devel/lib/mkl_intel_thread_dll.lib"],
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_intel_thread.3.dll", "libs": ["mkl-devel/lib/mkl_intel_thread_dll.lib"] }
+      ],
       "depends": ["mkl-core"]
     },
     "mkl-thread-tbb": {
-      "libs": ["mkl-runtime/bin/mkl_tbb_thread.3.dll"],
-      "libi": ["mkl-devel/lib/mkl_tbb_thread_dll.lib"],
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_tbb_thread.3.dll", "libs": ["mkl-devel/lib/mkl_tbb_thread_dll.lib"] }
+      ],
       "depends": ["mkl-core"]
     },
     "mkl-sycl": {
-      "libs": [
-        "mkl-runtime/bin/mkl_sycl_blas.6.dll",
-        "mkl-runtime/bin/mkl_sycl_data_fitting.6.dll",
-        "mkl-runtime/bin/mkl_sycl_dft.6.dll",
-        "mkl-runtime/bin/mkl_sycl_lapack.6.dll",
-        "mkl-runtime/bin/mkl_sycl_rng.6.dll",
-        "mkl-runtime/bin/mkl_sycl_sparse.6.dll",
-        "mkl-runtime/bin/mkl_sycl_stats.6.dll",
-        "mkl-runtime/bin/mkl_sycl_vm.6.dll"
-      ],
-      "libi": [
-        "mkl-devel/lib/mkl_sycl_blas_dll.lib",
-        "mkl-devel/lib/mkl_sycl_data_fitting_dll.lib",
-        "mkl-devel/lib/mkl_sycl_dft_dll.lib",
-        "mkl-devel/lib/mkl_sycl_lapack_dll.lib",
-        "mkl-devel/lib/mkl_sycl_rng_dll.lib",
-        "mkl-devel/lib/mkl_sycl_sparse_dll.lib",
-        "mkl-devel/lib/mkl_sycl_stats_dll.lib",
-        "mkl-devel/lib/mkl_sycl_vm_dll.lib"
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_sycl_blas.6.dll",         "libs": ["mkl-devel/lib/mkl_sycl_blas_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_data_fitting.6.dll",  "libs": ["mkl-devel/lib/mkl_sycl_data_fitting_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_dft.6.dll",           "libs": ["mkl-devel/lib/mkl_sycl_dft_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_lapack.6.dll",        "libs": ["mkl-devel/lib/mkl_sycl_lapack_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_rng.6.dll",           "libs": ["mkl-devel/lib/mkl_sycl_rng_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_sparse.6.dll",        "libs": ["mkl-devel/lib/mkl_sycl_sparse_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_stats.6.dll",         "libs": ["mkl-devel/lib/mkl_sycl_stats_dll.lib"] },
+        { "dll": "mkl-runtime/bin/mkl_sycl_vm.6.dll",            "libs": ["mkl-devel/lib/mkl_sycl_vm_dll.lib"] }
       ],
       "depends": ["mkl-core"]
     },
     "mkl-cluster-lp64": {
-      "libs": [
-        "mkl-runtime/bin/mkl_scalapack_lp64.2.dll",
-        "mkl-runtime/bin/mkl_blacs_lp64.2.dll"
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_scalapack_lp64.2.dll", "libs": ["mkl-devel/lib/mkl_scalapack_lp64_dll.lib"] }
       ],
-      "libi": [
-        "mkl-devel/lib/mkl_scalapack_lp64_dll.lib",
-        "mkl-devel/lib/mkl_blacs_lp64_dll.lib"
-      ],
+      "shared":  ["mkl-runtime/bin/mkl_blacs_lp64.2.dll"],
       "depends": ["mkl-lp64"]
     },
     "mkl-cluster-lp64-intelmpi": {
-      "libs": ["mkl-runtime/bin/mkl_blacs_intelmpi_lp64.2.dll"],
-      "liba": ["mkl-devel/lib/mkl_blacs_intelmpi_lp64.lib"],
-      "depends": ["mkl-cluster-lp64"]
+      "shared":   ["mkl-runtime/bin/mkl_blacs_intelmpi_lp64.2.dll"],
+      "archives": ["mkl-devel/lib/mkl_blacs_intelmpi_lp64.lib"],
+      "depends":  ["mkl-cluster-lp64"]
     },
     "mkl-cluster-lp64-msmpi": {
-      "libs": ["mkl-runtime/bin/mkl_blacs_msmpi_lp64.2.dll"],
+      "shared":  ["mkl-runtime/bin/mkl_blacs_msmpi_lp64.2.dll"],
       "depends": ["mkl-cluster-lp64"]
     },
     "mkl-cluster-ilp64": {
-      "libs": [
-        "mkl-runtime/bin/mkl_scalapack_ilp64.2.dll",
-        "mkl-runtime/bin/mkl_blacs_ilp64.2.dll"
+      "linked": [
+        { "dll": "mkl-runtime/bin/mkl_scalapack_ilp64.2.dll", "libs": ["mkl-devel/lib/mkl_scalapack_ilp64_dll.lib"] }
       ],
-      "libi": [
-        "mkl-devel/lib/mkl_scalapack_ilp64_dll.lib",
-        "mkl-devel/lib/mkl_blacs_ilp64_dll.lib"
-      ],
+      "shared":  ["mkl-runtime/bin/mkl_blacs_ilp64.2.dll"],
       "depends": ["mkl-ilp64"]
     },
     "mkl-cluster-ilp64-intelmpi": {
-      "libs": ["mkl-runtime/bin/mkl_blacs_intelmpi_ilp64.2.dll"],
-      "liba": ["mkl-devel/lib/mkl_blacs_intelmpi_ilp64.lib"],
-      "depends": ["mkl-cluster-ilp64", "mkl-cluster-lp64-intelmpi"]
+      "shared":   ["mkl-runtime/bin/mkl_blacs_intelmpi_ilp64.2.dll"],
+      "archives": ["mkl-devel/lib/mkl_blacs_intelmpi_ilp64.lib"],
+      "depends":  ["mkl-cluster-ilp64", "mkl-cluster-lp64-intelmpi"]
     },
     "mkl-cluster-ilp64-msmpi": {
-      "libs": ["mkl-runtime/bin/mkl_blacs_msmpi_ilp64.2.dll"],
+      "shared":  ["mkl-runtime/bin/mkl_blacs_msmpi_ilp64.2.dll"],
       "depends": ["mkl-cluster-ilp64"]
     }
   },
 
   "x86_64-linux": {
     "mkl": {
-      "libs": ["mkl-runtime/lib/libmkl_rt.so"],
+      "shared": ["mkl-runtime/lib/libmkl_rt.so"],
       "depends": ["mkl-core", "mkl-dispatch", "mkl-thread-seq"]
     },
     "mkl-core": {
-      "libs": ["mkl-runtime/lib/libmkl_core.so"],
+      "shared": ["mkl-runtime/lib/libmkl_core.so"],
       "depends": ["mkl-lp64"]
     },
     "mkl-dispatch": {
-      "libs": [
+      "shared": [
         "mkl-runtime/lib/libmkl_avx2.so.3",
         "mkl-runtime/lib/libmkl_avx512.so.3",
         "mkl-runtime/lib/libmkl_avx10.so.3",
@@ -152,44 +130,39 @@
         "mkl-runtime/lib/libmkl_vml_def.so.3",
         "mkl-runtime/lib/libmkl_vml_mc3.so.3",
         "mkl-runtime/lib/libmkl_vml_cmpt.so.3"
-      ],
-      "depends": []
+      ]
     },
     "mkl-lp64": {
-      "libs": ["mkl-runtime/lib/libmkl_intel_lp64.so"],
-      "depends": []
+      "shared": ["mkl-runtime/lib/libmkl_intel_lp64.so"]
     },
     "mkl-ilp64": {
-      "libs": ["mkl-runtime/lib/libmkl_intel_ilp64.so"],
-      "depends": []
+      "shared": ["mkl-runtime/lib/libmkl_intel_ilp64.so"]
     },
     "mkl-gf-lp64": {
-      "libs": ["mkl-runtime/lib/libmkl_gf_lp64.so"],
-      "depends": []
+      "shared": ["mkl-runtime/lib/libmkl_gf_lp64.so"]
     },
     "mkl-gf-ilp64": {
-      "libs": ["mkl-runtime/lib/libmkl_gf_ilp64.so"],
-      "depends": []
+      "shared": ["mkl-runtime/lib/libmkl_gf_ilp64.so"]
     },
     "mkl-thread-seq": {
-      "libs": ["mkl-runtime/lib/libmkl_sequential.so"],
+      "shared": ["mkl-runtime/lib/libmkl_sequential.so"],
       "depends": ["mkl-core"]
     },
     "mkl-thread-intel": {
-      "libs": ["mkl-runtime/lib/libmkl_intel_thread.so"],
+      "shared": ["mkl-runtime/lib/libmkl_intel_thread.so"],
       "depends": ["mkl-core"]
     },
     "mkl-thread-gnu": {
-      "libs": ["mkl-runtime/lib/libmkl_gnu_thread.so"],
+      "shared":   ["mkl-runtime/lib/libmkl_gnu_thread.so"],
       "loptions": ["-Wl,--no-as-needed", "-lgomp"],
-      "depends": ["mkl-core"]
+      "depends":  ["mkl-core"]
     },
     "mkl-thread-tbb": {
-      "libs": ["mkl-runtime/lib/libmkl_tbb_thread.so"],
+      "shared": ["mkl-runtime/lib/libmkl_tbb_thread.so"],
       "depends": ["mkl-core"]
     },
     "mkl-sycl": {
-      "libs": [
+      "shared": [
         "mkl-runtime/lib/libmkl_sycl_blas.so",
         "mkl-runtime/lib/libmkl_sycl_data_fitting.so",
         "mkl-runtime/lib/libmkl_sycl_dft.so",
@@ -203,27 +176,27 @@
       "depends": ["mkl-core"]
     },
     "mkl-cluster-lp64": {
-      "libs": ["mkl-runtime/lib/libmkl_scalapack_lp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_scalapack_lp64.so"],
       "depends": ["mkl-lp64"]
     },
     "mkl-cluster-lp64-intelmpi": {
-      "libs": ["mkl-runtime/lib/libmkl_blacs_intelmpi_lp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_blacs_intelmpi_lp64.so"],
       "depends": ["mkl-cluster-lp64"]
     },
     "mkl-cluster-lp64-openmpi": {
-      "libs": ["mkl-runtime/lib/libmkl_blacs_openmpi_lp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_blacs_openmpi_lp64.so"],
       "depends": ["mkl-cluster-lp64"]
     },
     "mkl-cluster-ilp64": {
-      "libs": ["mkl-runtime/lib/libmkl_scalapack_ilp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_scalapack_ilp64.so"],
       "depends": ["mkl-ilp64"]
     },
     "mkl-cluster-ilp64-intelmpi": {
-      "libs": ["mkl-runtime/lib/libmkl_blacs_intelmpi_ilp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_blacs_intelmpi_ilp64.so"],
       "depends": ["mkl-cluster-ilp64"]
     },
     "mkl-cluster-ilp64-openmpi": {
-      "libs": ["mkl-runtime/lib/libmkl_blacs_openmpi_ilp64.so"],
+      "shared": ["mkl-runtime/lib/libmkl_blacs_openmpi_ilp64.so"],
       "depends": ["mkl-cluster-ilp64"]
     }
   }
