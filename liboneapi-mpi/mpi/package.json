@@ -1,27 +1,31 @@
 {
-  "x86_64-windows":
+  "platforms":
   {
-    "mpi":
+    "x86_64-windows":
     {
-      "libs": ["mpi-runtime/bin/impi.dll"],
-      "libi": ["mpi-devel/lib/impi.lib"]
-    }
-  },
-  "x86_64-linux":
-  {
-    "mpi":
-    {
-      "libs": ["mpi-runtime/lib/libmpi.so"]
+      "mpi":
+      {
+        "linked": [
+          { "dll": "mpi-runtime/bin/impi.dll", "libs": ["mpi-devel/lib/impi.lib"] }
+        ]
+      }
     },
-    "mpicxx":
+    "x86_64-linux":
     {
-      "libs":    ["mpi-runtime/lib/libmpicxx.so"],
-      "depends": ["mpi"]
-    },
-    "mpifort":
-    {
-      "libs":    ["mpi-runtime/lib/libmpifort.so"],
-      "depends": ["mpi"]
+      "mpi":
+      {
+        "shared": ["mpi-runtime/lib/libmpi.so"]
+      },
+      "mpicxx":
+      {
+        "shared":  ["mpi-runtime/lib/libmpicxx.so"],
+        "depends": ["mpi"]
+      },
+      "mpifort":
+      {
+        "shared":  ["mpi-runtime/lib/libmpifort.so"],
+        "depends": ["mpi"]
+      }
     }
   },
   "exes":

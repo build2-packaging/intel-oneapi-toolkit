@@ -18,16 +18,10 @@ for plat: [json_object] ($manifest_json["$project"])
   devel_id   = [string] ($plat_val["devel_id"])
   runtime_id = [string] ($plat_val["runtime_id"])
 
-  if (!$empty($devel_id))
-  {
-    json{$devel_id...}:   json{$name-manifest}
-    archive{$name-intel.oneapi.$(name).devel-$package_ver...}: json{$devel_id...}: include = $enabled
-  }
-  if (!$empty($runtime_id))
-  {
-    json{$runtime_id...}: json{$name-manifest}
-    archive{$name-intel.oneapi.$(name).runtime-$package_ver...}: json{$runtime_id...}: include = $enabled
-  }
+  json{$devel_id...}:   json{$name-manifest}: include = (!$empty($devel_id))
+  archive{$name-intel.oneapi.$(name).devel-$package_ver...}: json{$devel_id...}: include = (!$empty($devel_id) && $enabled)
+  json{$runtime_id...}: json{$name-manifest}: include = (!$empty($runtime_id))
+  archive{$name-intel.oneapi.$(name).runtime-$package_ver...}: json{$runtime_id...}: include = (!$empty($runtime_id) && $enabled)
 }
 
 extract{$name-devel}:   archive{$name-intel.oneapi.$(name).devel-$package_ver...}
@@ -104,139 +98,119 @@ pub_hdrs = [strings] "-I$out_base/$name-devel/include"
 
 ./: json{package}
 json = [json_object] $json.load($src_base/package.json)
-for plat: [json_object] $json
+for plat: [json_object] ($json["platforms"])
 {
   plat_key = $member_name($plat)
-  if ($plat_key != 'exes')
+  enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+
+  for m: [json_object] ($member_value($plat))
   {
-    enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+    n = $member_name($m)
+    v = $member_value($m)
 
-    for m: [json_object] ($member_value($plat))
+    ./: libs{$n}:
     {
-      n = $member_name($m)
-      v = $member_value($m)
-      loptions =
-      libs = [paths]
+      include = $enabled
+      clean = false
+    }
+
+    # The "bundles" are either paired DLL + import lib (Windows),
+    # or shared-only (implicitly loaded, just needs to respect RPATH).
+    # Also explicitly append the extract-targets as inner-most prerequisites
+    # to make sure they are always unpacked first.
+    #
+    [rule_hint=cxx.link] \
+    libs{$n}: import{$name-legals} import{$name-headers}: \
+                extract{$name-devel} extract{$name-runtime}:
+    {
+      include = $enabled
+      update  = match
+    }
+
+    # Inter-dependencies
+    #
+    for d: [json_array] ($v["depends"])
+    {
+      dep = [name] $d
+      libs{$n}: libs{$dep}: include = $enabled
+      if $enabled
+      {
+        libs{$n}: cc.export.libs += libs{$dep}
+      }
+    }
+
+    # Windows: paired DLL + import lib bundles.
+    #
+    for b: [json_array] ($v["linked"])
+    {
+      dll  = [path] $out_base/($b["dll"])
       libi = [paths]
-      liba = [paths]
-      depends = [names]
-      for x: [json_array] ($v["loptions"])
-      {
-        loptions += [paths] $x
-      }
-      for x: [json_array] ($v["libs"])
-      {
-        libs += [paths] $out_base/$x
-      }
-      for x: [json_array] ($v["libi"])
-      {
+      for x: [json_array] ($b["libs"])
         libi += [paths] $out_base/$x
-      }
-      for x: [json_array] ($v["liba"])
-      {
-        liba += [paths] $out_base/$x
-      }
-      for x: [json_array] ($v["depends"])
-      {
-        depends += [names] $x
-      }
 
-      ./: libs{$n}:
+      <libs{$dll} libi{$libi}>: extract{$name-devel} extract{$name-runtime}: include = $enabled
+      libs{$n}: libs{$dll}: include = $enabled
+      if $enabled
       {
-        include = $enabled
-        clean = false
-      }
-
-      # The "bundles" are either both shared & import libs (Windows),
-      # or shared-only (implicitly loaded, just needs to respect RPATH).
-      # Also explicitly append the extract-targets as inner-most prerequisites
-      # to make sure they are always unpacked first.
-      #
-      [rule_hint=cxx.link] \
-      libs{$n}: import{$name-legals} import{$name-headers}: \
-                  extract{$name-devel} extract{$name-runtime}:
-      {
-        include = $enabled
-        update  = match
-      }
-
-      if (!$empty($depends))
-      {
-        # Inter-dependencies
-        #
-        libs{$n}: libs{$depends}: include = $enabled
-        if $enabled
+        libs{$n}:
         {
-          libs{$n}: cc.export.libs += libs{$depends}
+          cc.export.libs =+ libs{$dll}
         }
       }
-      if (!$empty($libs) && !$empty($libi))
+    }
+
+    # Shared libs / runtime DLLs (no import lib).
+    #
+    loptions = [strings]
+    for x: [json_array] ($v["loptions"])
+      loptions += $x
+
+    for so: [json_array] ($v["shared"])
+    {
+      s = [path] $out_base/$so
+      <libs{$s}>: extract{$name-devel} extract{$name-runtime}: include = $enabled
+      libs{$n}: libs{$s}: include = $enabled
+      if $enabled
       {
-        <libs{$libs} libi{$libi}>: extract{$name-devel} extract{$name-runtime}: include = $enabled
-        libs{$n}: libs{$libs}: include = $enabled
-        if $enabled
+        if ($cc.target.class != 'windows')
         {
-          # Export options.
-          #
           libs{$n}:
           {
-            cc.export.libs =+ libs{$libs}
+            cc.export.libs =+ libs{$s} $loptions
           }
         }
       }
-      elif (!$empty($libs))
-      {
-        <libs{$libs}>: extract{$name-devel} extract{$name-runtime}: include = $enabled
-        libs{$n}: libs{$libs}: include = $enabled
-        if $enabled
-        {
-          # Export options.
-          #
-          if ($cc.target.class != 'windows')
-          {
-            libs{$n}:
-            {
-              cc.export.libs =+ libs{$libs} $loptions
-            }
-          }
-        }
-      }
-      elif (!$empty($libi))
-      {
-        fail "$n: 'libi' without 'libs' is not supported; use 'liba' for static-link archives."
-      }
-      elif ($empty($liba))
-      {
-        fail "$n: No shared, import, or static libraries specified. See '$src_base/package.json'."
-      }
-
-      if (!$empty($liba))
-      {
-        <liba{$liba}>: extract{$name-devel}: include = $enabled
-        libs{$n}: liba{$liba}: include = $enabled
-        if $enabled
-        {
-          libs{$n}: cc.export.libs += liba{$liba}
-        }
-      }
-
-      # Export options.
-      #
-      libs{$n}:
-      {
-        cc.type = cc
-        cc.export.poptions = $pub_hdrs
-      }
-
-      # For pre-releases use the complete version to make sure they cannot
-      # be used in place of another pre-release or the final version. See
-      # the version module for details on the version.* variable values.
-      #
-      if $version.pre_release
-        lib{$name}: bin.lib.version = "-$version.project_id"
-      else
-        lib{$name}: bin.lib.version = "-$version.major.$version.minor"
     }
+
+    # Static libs.
+    #
+    for a: [json_array] ($v["archives"])
+    {
+      ar = [path] $out_base/$a
+      <liba{$ar}>: extract{$name-devel}: include = $enabled
+      libs{$n}: liba{$ar}: include = $enabled
+      if $enabled
+      {
+        libs{$n}: cc.export.libs += liba{$ar}
+      }
+    }
+
+    # Export options.
+    #
+    libs{$n}:
+    {
+      cc.type = cc
+      cc.export.poptions = $pub_hdrs
+    }
+
+    # For pre-releases use the complete version to make sure they cannot
+    # be used in place of another pre-release or the final version. See
+    # the version module for details on the version.* variable values.
+    #
+    if $version.pre_release
+      lib{$name}: bin.lib.version = "-$version.project_id"
+    else
+      lib{$name}: bin.lib.version = "-$version.major.$version.minor"
   }
 }
 
