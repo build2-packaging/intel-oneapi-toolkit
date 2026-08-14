@@ -143,8 +143,9 @@ for plat: [json_object] ($json["platforms"])
 {
   plat_key = $member_name($plat)
   enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+  plat_val = [json_object] $member_value($plat)
 
-  for m: [json_object] ($member_value($plat))
+  for m: [json_object] ($plat_val["libs"])
   {
     n = $member_name($m)
     v = $member_value($m)
@@ -254,23 +255,31 @@ for plat: [json_object] ($json["platforms"])
     else
       lib{$name}: bin.lib.version = "-$version.major.$version.minor"
   }
-}
 
-# Compiler executables declared in package.json.
-#
-for plat: [json_object] ($json["exes"])
-{
-  plat_key = $member_name($plat)
-  enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
-
-  for m: [json_object] ($member_value($plat))
+  # Compiler executables declared in package.json.
+  #
+  for m: [json_object] ($plat_val["exes"])
   {
-    p = $member_value($m)
-    if ($cc.target.class == 'windows')
-      p = "$(p).exe"
+    v = [json_object] ($member_value($m))
+    p = [string] ($v["path"])
 
-    ./: exe{$p}: include = $enabled
-    <exe{$p}>: import{$name-cfgs}: extract{$name-devel}: include = $enabled
+    ./: exe{$(p)...}: include = $enabled
+    exe{$(p)...}: import{$name-cfgs}: extract{$name-devel}: include = $enabled
+
+    exe{$(p)...}:
+    {
+      install.subdirs = true
+    }
+
+    for d2: [json_array] ($v["depends"])
+    {
+      dep = [name] $d2
+      exe{$(p)...}: libs{$dep}:
+      {
+        include = $enabled
+        clean = false
+      }
+    }
   }
 }
 

@@ -1,38 +1,48 @@
 {
-  "platforms": {
-    "x86_64-windows": {
-      "ifort": {
-        "linked": [
-          { "dll": "ifort-devel/bin/libifportmd.dll", "libs": ["ifort-devel/lib/libifportmd.lib"] }
-        ],
-        "shared": [
-          "ifort-devel/bin/libifcoremd.dll"
-        ],
-        "archives": [
-          "ifort-devel/lib/libifcoremd.lib"
-        ]
+  "platforms":
+  {
+    "x86_64-windows":
+    {
+      "libs":
+      {
+        "ifort": {
+          "linked": [
+            { "dll": "ifort-devel/bin/libifportmd.dll", "libs": ["ifort-devel/lib/libifportmd.lib"] }
+          ],
+          "shared": [
+            "ifort-devel/bin/libifcoremd.dll"
+          ],
+          "archives": [
+            "ifort-devel/lib/libifcoremd.lib"
+          ]
+        }
+      },
+      "exes":
+      {
+        "ifx":      {"path": "ifort-devel/bin/ifx.exe",              "depends": []},
+        "fpp":      {"path": "ifort-devel/bin/fpp.exe",              "depends": []},
+        "xfortcom": {"path": "ifort-devel/bin/compiler/xfortcom.exe", "depends": []}
       }
     },
-    "x86_64-linux": {
-      "ifort": {
-        "shared": [
-          "ifort-devel/lib/libifcore.so",
-          "ifort-devel/lib/libifcoremt.so",
-          "ifort-devel/lib/libifport.so"
-        ]
+
+    "x86_64-linux":
+    {
+      "libs":
+      {
+        "ifort": {
+          "shared": [
+            "ifort-devel/lib/libifcore.so",
+            "ifort-devel/lib/libifcoremt.so",
+            "ifort-devel/lib/libifport.so"
+          ]
+        }
+      },
+      "exes":
+      {
+        "ifx":      {"path": "ifort-devel/bin/ifx",              "depends": []},
+        "fpp":      {"path": "ifort-devel/bin/fpp",              "depends": []},
+        "xfortcom": {"path": "ifort-devel/bin/compiler/xfortcom", "depends": []}
       }
-    }
-  },
-  "exes": {
-    "x86_64-windows": {
-      "ifx":      "ifort-devel/bin/ifx",
-      "fpp":      "ifort-devel/bin/fpp",
-      "xfortcom": "ifort-devel/bin/compiler/xfortcom"
-    },
-    "x86_64-linux": {
-      "ifx":      "ifort-devel/bin/ifx",
-      "fpp":      "ifort-devel/bin/fpp",
-      "xfortcom": "ifort-devel/bin/compiler/xfortcom"
     }
   }
 }
