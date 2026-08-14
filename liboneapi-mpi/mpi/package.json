@@ -15,7 +15,7 @@
       "exes":
       {
         "mpiexec":   {"path": "mpi-runtime/bin/mpiexec.exe",   "depends": []},
-        "impi_info": {"path": "mpi-runtime/bin/impi_info.exe", "depends": []}
+        "impi_info": {"path": "mpi-runtime/bin/impi_info.exe", "depends": ["mpi"]}
       }
     },
 
@@ -41,7 +41,7 @@
       "exes":
       {
         "mpiexec":   {"path": "mpi-runtime/bin/mpiexec",   "depends": []},
-        "impi_info": {"path": "mpi-runtime/bin/impi_info", "depends": []}
+        "impi_info": {"path": "mpi-runtime/bin/impi_info", "depends": ["mpi"]}
       }
     }
   }

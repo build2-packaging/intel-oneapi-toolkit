@@ -248,6 +248,16 @@ exe{~'/(.+)/'}:
 {{
   diag import $> $<
   touch $path($>)
+
+  # Intel MPI ships executables with a hardcoded absolute RPATH pointing to
+  # the Intel installation layout. Rewrite it to a $ORIGIN-relative path so
+  # the binary finds its sibling libs in mpi-runtime/lib/ from both the build
+  # tree and an install tree.
+  #
+  if ($cc.target.class == 'linux')
+    echo patchelf $relative($path($>), $src_root)
+    patchelf --set-rpath '$ORIGIN/../lib' $path($>)
+  end
 }}
 
 # Recreate the upstream include/ hierarchy under, e.g., /usr/include/.

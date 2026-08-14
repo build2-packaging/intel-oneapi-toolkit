@@ -13,3 +13,4 @@ package-email: packaging@build2.org ; Mailing list.
 builds: none; Times out downloading large binaries
 depends: * build2 >= 0.17.0
 depends: * bpkg >= 0.17.0
+requires: patchelf ? ($cc.target.class == 'linux') ; Required on Linux to patch a relocatable rpath into pre-built executables.

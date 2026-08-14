@@ -18,10 +18,8 @@ exe{test-mpicxx}: cxx{mpicxx} $mpicxx
 }
 exe{test-mpifort}: cxx{mpifort} $mpifort
 
-testscript{mpiexec}@./: test = $mpiexec
-./: testscript{mpiexec}@./ $mpiexec
+testscript{mpiexec}@./:   test = $mpiexec
+testscript{impi_info}@./: test = $impi_info
 
-# impi_info has a hardcoded RPATH to the Intel installation layout and
-# cannot find libmpi.so in the build tree without patchelf. Not tested
-# standalone; still extracted and present.
-./: $impi_info
+./: testscript{mpiexec}@./   $mpiexec
+./: testscript{impi_info}@./ $impi_info
