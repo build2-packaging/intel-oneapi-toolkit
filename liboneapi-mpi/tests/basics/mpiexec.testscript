@@ -1,0 +1,2 @@
+: smoke
+$* --version >! 2>!

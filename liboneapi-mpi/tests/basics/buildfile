@@ -1,8 +1,8 @@
 import mpi     = liboneapi-mpi%libs{mpi}
 import mpicxx  = liboneapi-mpi%libs{mpicxx}
 import mpifort = liboneapi-mpi%libs{mpifort}
-import! mpiexec   = liboneapi-mpi%exe{mpiexec}
-import! impi_info = liboneapi-mpi%exe{impi_info}
+import mpiexec   = liboneapi-mpi%exe{mpiexec}
+import impi_info = liboneapi-mpi%exe{impi_info}
 
 ./: exe{test-mpi}: cxx{mpi} $mpi
 
@@ -18,9 +18,10 @@ exe{test-mpicxx}: cxx{mpicxx} $mpicxx
 }
 exe{test-mpifort}: cxx{mpifort} $mpifort
 
-./: $mpiexec $impi_info testscript
-{
-  mpiexec   = $mpiexec
-  impi_info = $impi_info
-  test      = true
-}
+testscript{mpiexec}@./: test = $mpiexec
+./: testscript{mpiexec}@./ $mpiexec
+
+# impi_info has a hardcoded RPATH to the Intel installation layout and
+# cannot find libmpi.so in the build tree without patchelf. Not tested
+# standalone; still extracted and present.
+./: $impi_info
