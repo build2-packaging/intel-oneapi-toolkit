@@ -54,9 +54,10 @@ json{~'/(.+-manifest.*)/'}:
   diag curl $manifest_url -> $>
 
   if (!$string.starts_with($pkgVer, $version))
+  {
     echo "[error] $n version mismatch: v$version \(local) != v$pkgVer \(remote)" >&2
     exit 1
-  end
+  }
 
   curl -\# --fail --output $path($>) "$manifest_url"
 }}
@@ -72,18 +73,22 @@ json{~'/([a-z]+\.[a-z]+.*)/'}:
 
   res = [json_array]
   for p : $packages
+  {
     id = ($p["id"])
     if($string.ends_with($id, $n))
+    {
       for j : ($p["payloads"])
+      {
         file = ($j["fileName"])
         url = [path] ($j["url"])
         if($string.ends_with($file, 'manifest.json'))
+        {
           curl -\# --fail --output $path($>) "$url"
           exit 0
-        end
-      end
-    end
-  end
+        }
+      }
+    }
+  }
   echo "$json.serialize($packages)$\nFailed to find id '$n' with payload file 'manifest.json' in json" >&2
   exit 1
 }}
@@ -101,11 +106,13 @@ archive{~'/(.+)/'}:
   payloads = [json_array] ($meta["payloads"])
 
   for p : [json_array] $payloads
+  {
     file = [string] ($p["fileName"])
     if ($file == 'cupPayload.cup')
+    {
       url = [path] ($p["url"])
-    end
-  end
+    }
+  }
 
   depdb hash $meta
   diag curl $url -> $path($>)
@@ -185,23 +192,28 @@ if ($cc.target.class != 'windows')
     mkdir --no-cleanup -p "$dst"
 
     for src : [paths] $path($>)
+    {
       find "$directory($src)" -maxdepth 1 -name "$leaf($src).*" -type f \
         | set real_files [paths]
       find "$directory($src)" -maxdepth 1 -name "$leaf($src).*" -type l \
         | set sym_files [paths]
 
       if (!$empty($real_files))
+      {
         real = $front($real_files)
         cp --no-cleanup "$real" "$dst/"
         rm -f "$dst/$leaf($src)"
         ln --no-cleanup -s "$leaf($real)" "$dst/$leaf($src)"
         for s : $sym_files
+        {
           rm -f "$dst/$leaf($s)"
           ln --no-cleanup -s "$leaf($real)" "$dst/$leaf($s)"
-        end
+        }
+      }
       else
+      {
         cp --no-cleanup "$src" "$dst/"
-      end
-    end
+      }
+    }
   }}
 }

@@ -39,12 +39,14 @@ import{$name-legals}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/share/doc/compiler/licensing
+    {
       find "$o/$name($g)/share/doc/compiler/licensing" -type f -name "*" \
         | set -n f [paths]
       files += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -60,8 +62,9 @@ import{$name-legals}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 import{$name-cfgs}: extract{$name-devel}: update = match
@@ -85,8 +88,9 @@ import{$name-cfgs}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 # omp.h, mathimf.h, and other host C/C++ headers live under
@@ -102,15 +106,18 @@ import{$name-includes}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     for sub: "opt/compiler/include" "include"
+    {
       if test -d $o/$name($g)/$sub
+      {
         find "$o/$name($g)/$sub" -type f \
           | sed -n -e 's/^(.+\.(h|hpp))$/\1/p' \
           | set -n f [paths]
         files += $f
-      end
-    end
-  end
+      }
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -126,8 +133,9 @@ import{$name-includes}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 pub_hdrs = [strings] \

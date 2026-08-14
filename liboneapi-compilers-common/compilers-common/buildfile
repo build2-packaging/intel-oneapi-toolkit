@@ -36,14 +36,17 @@ import{$name-headers}:
 
   hdrs = [paths]
   for g : $filter($<, group)
+  {
     for inc : include opt/compiler/include
+    {
       if test -d $o/$name($g)/$inc
+      {
         find "$o/$name($g)/$inc" -type f -name "*.h*" \
           | set -n f [paths]
         hdrs += $f
-      end
-    end
-  end
+      }
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -59,8 +62,9 @@ import{$name-headers}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 pub_hdrs = [strings]

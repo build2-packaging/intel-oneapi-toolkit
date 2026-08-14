@@ -41,12 +41,14 @@ import{$name-legals}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/share/doc/compiler/licensing
+    {
       find "$o/$name($g)/share/doc/compiler/licensing" -type f -name "*" \
         | set -n f [paths]
       files += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -62,8 +64,9 @@ import{$name-legals}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 pub_hdrs = [strings]

@@ -11,8 +11,8 @@ url: https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit
 package-url: https://github.com/build2-packaging/intel-oneapi-toolkit
 package-email: packaging@build2.org ; Mailing list.
 builds: none; Times out downloading large binaries
-depends: * build2 >= 0.17.0
-depends: * bpkg >= 0.17.0
+depends: * build2 >= 0.18.0
+depends: * bpkg >= 0.18.0
 depends: liboneapi-openmp ^ 2026.0.0
 depends: liboneapi-tbb ^ 2023.0.0
 depends: liboneapi-mpi ^ 2021.18.0

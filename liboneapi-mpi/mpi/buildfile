@@ -37,12 +37,14 @@ import{$name-headers}:
 
   hdrs = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/include
+    {
       find "$o/$name($g)/include" -type f -name "*.h*" \
         | set -n f [paths]
       hdrs += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -58,8 +60,9 @@ import{$name-headers}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 import{$name-legals}:
@@ -69,12 +72,14 @@ import{$name-legals}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/share/doc/$name
+    {
       find "$o/$name($g)/share/doc/$name" -type f -name "*" \
         | set -n f [paths]
       files += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -90,8 +95,9 @@ import{$name-legals}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 pub_hdrs = [strings] "-I$out_base/$name-devel/include"
@@ -255,9 +261,10 @@ exe{~'/(.+)/'}:
   # tree and an install tree.
   #
   if ($cc.target.class == 'linux')
+  {
     echo patchelf $relative($path($>), $src_root)
     patchelf --set-rpath '$ORIGIN/../lib' $path($>)
-  end
+  }
 }}
 
 # Recreate the upstream include/ hierarchy under, e.g., /usr/include/.

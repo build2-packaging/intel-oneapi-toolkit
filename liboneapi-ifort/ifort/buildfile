@@ -47,12 +47,14 @@ import{$name-legals}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/share/doc/compiler/licensing
+    {
       find "$o/$name($g)/share/doc/compiler/licensing" -type f -name "*" \
         | set -n f [paths]
       files += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -68,8 +70,9 @@ import{$name-legals}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 import{$name-cfgs}: extract{$name-devel}: update = match
@@ -93,8 +96,9 @@ import{$name-cfgs}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 import{$name-includes}: extract{$name-devel}: update = match
@@ -106,13 +110,15 @@ import{$name-includes}:
 
   files = [paths]
   for g : $filter($<, group)
+  {
     if test -d $o/$name($g)/opt/compiler/include
+    {
       find "$o/$name($g)/opt/compiler/include" -type f \
         | sed -n -e 's/^(.+\.(h|f90|mod))$/\1/p' \
         | set -n f [paths]
       files += $f
-    end
-  end
+    }
+  }
 
   depdb dyndep \
     --dyn-target \
@@ -129,8 +135,9 @@ import{$name-includes}:
   diag import $>
 
   for t : $filter_out($>, group)
+  {
     touch $path($t)
-  end
+  }
 }}
 
 pub_hdrs = [strings] \
