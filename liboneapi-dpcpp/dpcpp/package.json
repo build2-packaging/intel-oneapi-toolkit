@@ -1,20 +1,30 @@
 {
   "platforms":
   {
-    "x86_64-windows": { "dpcpp": {} },
-    "x86_64-linux":   { "dpcpp": {} }
-  },
-  "exes":
-  {
     "x86_64-windows":
     {
-      "icx":  "dpcpp-devel/bin/icx",
-      "icpx": "dpcpp-devel/bin/icpx"
+      "libs":
+      {
+        "dpcpp": {}
+      },
+      "exes":
+      {
+        "icx":  {"path": "dpcpp-devel/bin/icx.exe",  "depends": []},
+        "icpx": {"path": "dpcpp-devel/bin/icpx.exe", "depends": []}
+      }
     },
+
     "x86_64-linux":
     {
-      "icx":  "dpcpp-devel/bin/icx",
-      "icpx": "dpcpp-devel/bin/icpx"
+      "libs":
+      {
+        "dpcpp": {}
+      },
+      "exes":
+      {
+        "icx":  {"path": "dpcpp-devel/bin/icx",  "depends": []},
+        "icpx": {"path": "dpcpp-devel/bin/icpx", "depends": []}
+      }
     }
   }
 }
