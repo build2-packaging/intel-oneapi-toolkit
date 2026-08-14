@@ -1,0 +1,9 @@
+: smoke
+$* --version >! 2>!
+
+: preprocess
+cat <<EOI >= input.f90 && $* input.f90 output.f90 >! 2>! &output.f90
+C preprocessor test
+      program test
+      end
+EOI

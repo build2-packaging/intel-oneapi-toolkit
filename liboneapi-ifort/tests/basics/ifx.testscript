@@ -1,0 +1,8 @@
+: smoke
+$* --version >! 2>!
+
+: compile-f90
+cat <<EOI >= hello.f90 && $* -c hello.f90 -o hello.o >! 2>! &hello.o
+      program hello
+      end program hello
+EOI

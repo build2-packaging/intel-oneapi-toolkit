@@ -1,16 +1,15 @@
-import libs = liboneapi-ifort%libs{ifort}
-import! ifx = liboneapi-ifort%exe{ifx}
-import! fpp = liboneapi-ifort%exe{fpp}
+import libs    = liboneapi-ifort%libs{ifort}
+import ifx     = liboneapi-ifort%exe{ifx}
+import fpp     = liboneapi-ifort%exe{fpp}
+import xfortcom = liboneapi-ifort%exe{xfortcom}
 
 ./: exe{test-ifort}: cxx{ifort} $libs
 
-define f90: file
-f90{*}: extension = f90
+testscript{ifx}@./: test = $ifx
+testscript{fpp}@./: test = $fpp
 
-./: $ifx $fpp f90{hello} testscript
-{
-  ifx = $ifx
-  fpp = $fpp
-  source = f90{hello}
-  test = true
-}
+./: testscript{ifx}@./ $ifx
+./: testscript{fpp}@./ $fpp
+
+# xfortcom is an internal backend invoked by ifx; not tested standalone.
+./: $xfortcom
