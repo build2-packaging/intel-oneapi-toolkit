@@ -1,0 +1,13 @@
+: smoke
+$* --version >! 2>!
+
+: compile-cxx
+cat <<EOI >= hello.cpp && $* -c hello.cpp -o hello.o >! 2>! &hello.o
+int main() { return 0; }
+EOI
+
+: compile-omp-header
+cat <<EOI >= omp.cpp && $* -fiopenmp -c omp.cpp -o omp.o >! 2>! &omp.o
+#include <omp.h>
+int main() { return omp_get_max_threads() > 0 ? 0 : 1; }
+EOI

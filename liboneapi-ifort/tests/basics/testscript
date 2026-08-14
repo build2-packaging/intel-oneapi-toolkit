@@ -1,8 +1,0 @@
-: ifx compile test
-{
-  $path($ifx) -c $path($source) -o hello.o &hello.o >! 2>! == 0
-}
-: fpp preprocess test
-{
-  $path($fpp) $path($source) hello_pp.f90 &hello_pp.f90 >! 2>! == 0
-}

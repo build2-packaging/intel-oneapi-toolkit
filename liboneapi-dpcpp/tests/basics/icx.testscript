@@ -1,0 +1,7 @@
+: smoke
+$* --version >! 2>!
+
+: compile-c
+cat <<EOI >= hello.c && $* -c hello.c -o hello.o >! 2>! &hello.o
+int main(void) { return 0; }
+EOI
