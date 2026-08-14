@@ -1,88 +1,101 @@
 {
-  "x86_64-windows": {
-    "compilers-common": {
-      "linked": [
-        { "dll": "compilers-common-runtime/bin/libmmd.dll",      "libs": ["compilers-common-devel/lib/libmmd.lib"] },
-        { "dll": "compilers-common-runtime/bin/svml_dispmd.dll", "libs": ["compilers-common-devel/lib/svml_dispmd.lib"] },
-        { "dll": "compilers-common-runtime/bin/libirngmd.dll",   "libs": ["compilers-common-devel/lib/libirngmd.lib"] }
-      ]
+  "platforms":
+  {
+    "x86_64-windows":
+    {
+      "libs":
+      {
+        "compilers-common": {
+          "linked": [
+            { "dll": "compilers-common-runtime/bin/libmmd.dll",      "libs": ["compilers-common-devel/lib/libmmd.lib"] },
+            { "dll": "compilers-common-runtime/bin/svml_dispmd.dll", "libs": ["compilers-common-devel/lib/svml_dispmd.lib"] },
+            { "dll": "compilers-common-runtime/bin/libirngmd.dll",   "libs": ["compilers-common-devel/lib/libirngmd.lib"] }
+          ]
+        },
+        "compilers-common-icx": {
+          "archives": [
+            "compilers-common-devel/lib/libbfp754.lib",
+            "compilers-common-devel/lib/libdecimal.lib",
+            "compilers-common-devel/lib/libicaio.lib",
+            "compilers-common-devel/lib/libipgo.lib",
+            "compilers-common-devel/lib/libirc.lib",
+            "compilers-common-devel/lib/libircmt.lib",
+            "compilers-common-devel/lib/libirng.lib",
+            "compilers-common-devel/lib/libistrconv.lib",
+            "compilers-common-devel/lib/libm.lib",
+            "compilers-common-devel/lib/libmatmul.lib",
+            "compilers-common-devel/lib/libmmds.lib",
+            "compilers-common-devel/lib/libmmt.lib",
+            "compilers-common-devel/lib/svml_dispmt.lib"
+          ]
+        },
+        "compilers-common-xpti": {
+          "linked": [
+            { "dll": "compilers-common-runtime/bin/xptifw.dll", "libs": ["compilers-common-devel/lib/xptifw.lib"] }
+          ],
+          "archives": [
+            "compilers-common-devel/lib/xpti.lib"
+          ],
+          "depends": ["compilers-common"]
+        },
+        "compilers-common-ur": {
+          "linked": [
+            { "dll": "compilers-common-runtime/bin/ur_loader.dll", "libs": ["compilers-common-devel/lib/ur_loader.lib"] }
+          ],
+          "shared": [
+            "compilers-common-runtime/bin/ur_adapter_level_zero.dll",
+            "compilers-common-runtime/bin/ur_adapter_level_zero_v2.dll",
+            "compilers-common-runtime/bin/ur_adapter_opencl.dll"
+          ],
+          "depends": ["compilers-common"]
+        },
+        "compilers-common-malloc": {
+          "linked": [
+            { "dll": "compilers-common-runtime/bin/qkmalloc.dll", "libs": ["compilers-common-devel/lib/qkmalloc.lib"] }
+          ]
+        }
+      },
+      "exes": {}
     },
-    "compilers-common-icx": {
-      "archives": [
-        "compilers-common-devel/lib/libbfp754.lib",
-        "compilers-common-devel/lib/libdecimal.lib",
-        "compilers-common-devel/lib/libicaio.lib",
-        "compilers-common-devel/lib/libipgo.lib",
-        "compilers-common-devel/lib/libirc.lib",
-        "compilers-common-devel/lib/libircmt.lib",
-        "compilers-common-devel/lib/libirng.lib",
-        "compilers-common-devel/lib/libistrconv.lib",
-        "compilers-common-devel/lib/libm.lib",
-        "compilers-common-devel/lib/libmatmul.lib",
-        "compilers-common-devel/lib/libmmds.lib",
-        "compilers-common-devel/lib/libmmt.lib",
-        "compilers-common-devel/lib/svml_dispmt.lib"
-      ]
-    },
-    "compilers-common-xpti": {
-      "linked": [
-        { "dll": "compilers-common-runtime/bin/xptifw.dll", "libs": ["compilers-common-devel/lib/xptifw.lib"] }
-      ],
-      "archives": [
-        "compilers-common-devel/lib/xpti.lib"
-      ],
-      "depends": ["compilers-common"]
-    },
-    "compilers-common-ur": {
-      "linked": [
-        { "dll": "compilers-common-runtime/bin/ur_loader.dll", "libs": ["compilers-common-devel/lib/ur_loader.lib"] }
-      ],
-      "shared": [
-        "compilers-common-runtime/bin/ur_adapter_level_zero.dll",
-        "compilers-common-runtime/bin/ur_adapter_level_zero_v2.dll",
-        "compilers-common-runtime/bin/ur_adapter_opencl.dll"
-      ],
-      "depends": ["compilers-common"]
-    },
-    "compilers-common-malloc": {
-      "linked": [
-        { "dll": "compilers-common-runtime/bin/qkmalloc.dll", "libs": ["compilers-common-devel/lib/qkmalloc.lib"] }
-      ]
-    }
-  },
 
-  "x86_64-linux": {
-    "compilers-common": {
-      "shared": [
-        "compilers-common-runtime/lib/libimf.so",
-        "compilers-common-runtime/lib/libsvml.so",
-        "compilers-common-runtime/lib/libirng.so",
-        "compilers-common-runtime/lib/libintlc.so",
-        "compilers-common-runtime/lib/libirc.so"
-      ]
-    },
-    "compilers-common-icx": {
-      "archives": [
-        "compilers-common-devel/lib/libbfp754.a",
-        "compilers-common-devel/lib/libdecimal.a",
-        "compilers-common-devel/lib/libimf.a",
-        "compilers-common-devel/lib/libipgo.a",
-        "compilers-common-devel/lib/libirc.a",
-        "compilers-common-devel/lib/libirc_s.a",
-        "compilers-common-devel/lib/libirng.a",
-        "compilers-common-devel/lib/libistrconv.a",
-        "compilers-common-devel/lib/libmatmul.a",
-        "compilers-common-devel/lib/libsvml.a"
-      ]
-    },
-    "compilers-common-xpti": {
-      "shared": ["compilers-common-runtime/lib/libxptifw.so"],
-      "archives": ["compilers-common-devel/lib/libxpti.a"],
-      "depends": ["compilers-common"]
-    },
-    "compilers-common-malloc": {
-      "shared": ["compilers-common-runtime/lib/libqkmalloc.so"],
-      "depends": ["compilers-common"]
+    "x86_64-linux":
+    {
+      "libs":
+      {
+        "compilers-common": {
+          "shared": [
+            "compilers-common-runtime/lib/libimf.so",
+            "compilers-common-runtime/lib/libsvml.so",
+            "compilers-common-runtime/lib/libirng.so",
+            "compilers-common-runtime/lib/libintlc.so",
+            "compilers-common-runtime/lib/libirc.so"
+          ]
+        },
+        "compilers-common-icx": {
+          "archives": [
+            "compilers-common-devel/lib/libbfp754.a",
+            "compilers-common-devel/lib/libdecimal.a",
+            "compilers-common-devel/lib/libimf.a",
+            "compilers-common-devel/lib/libipgo.a",
+            "compilers-common-devel/lib/libirc.a",
+            "compilers-common-devel/lib/libirc_s.a",
+            "compilers-common-devel/lib/libirng.a",
+            "compilers-common-devel/lib/libistrconv.a",
+            "compilers-common-devel/lib/libmatmul.a",
+            "compilers-common-devel/lib/libsvml.a"
+          ]
+        },
+        "compilers-common-xpti": {
+          "shared": ["compilers-common-runtime/lib/libxptifw.so"],
+          "archives": ["compilers-common-devel/lib/libxpti.a"],
+          "depends": ["compilers-common"]
+        },
+        "compilers-common-malloc": {
+          "shared": ["compilers-common-runtime/lib/libqkmalloc.so"],
+          "depends": ["compilers-common"]
+        }
+      },
+      "exes": {}
     }
   }
 }
