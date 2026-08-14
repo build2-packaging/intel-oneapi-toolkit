@@ -12,6 +12,12 @@ c{*}:   extension = c
 hxx{*}: extension = hpp
 cxx{*}: extension = cpp
 
+# Since the executables are prebuilt, the normally run link-rule never
+# assigns it explicitly. Let's be explicit here and in package.json.
+#
+if ($cc.target.class == 'windows')
+  exe{*}: extension = exe
+
 config [dir_path] config.liboneapi_mkl.cache ?= \
   (!$null($config.liboneapi.cache) ? $config.liboneapi.cache : $out_root)
 

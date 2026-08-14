@@ -125,12 +125,13 @@ pub_hdrs = [strings] "-I$out_base/$name-devel/include/oneapi" "-I$out_base/$name
 
 ./: json{package}
 json = [json_object] $json.load($src_base/package.json)
-for plat: [json_object] $json
+for plat: [json_object] ($json["platforms"])
 {
   plat_key = $member_name($plat)
   enabled  = [bool] ($cc.target.cpu-$cc.target.class == $plat_key)
+  plat_val = [json_object] $member_value($plat)
 
-  for m: [json_object] ($member_value($plat))
+  for m: [json_object] ($plat_val["libs"])
   {
     n = $member_name($m)
     v = $member_value($m)
@@ -239,7 +240,42 @@ for plat: [json_object] $json
     else
       lib{$name}: bin.lib.version = "-$version.major.$version.minor"
   }
+
+  for m: [json_object] ($plat_val["exes"])
+  {
+    v = [json_object] ($member_value($m))
+    p = [string] ($v["path"])
+
+    ./: exe{$(p)...}: include = $enabled
+    exe{$(p)...}: extract{$name-devel} extract{$name-runtime}: include = $enabled
+
+    exe{$(p)...}:
+    {
+      install.subdirs = true
+    }
+
+    for d2: [json_array] ($v["depends"])
+    {
+      dep = [name] $d2
+      exe{$(p)...}: libs{$dep}:
+      {
+        include = $enabled
+        clean = false
+      }
+    }
+  }
 }
+
+# No registered rule matches a pre-built exe that has no source prerequisites
+# and does not yet exist on disk. This ad-hoc regex pattern rule provides an
+# explicit perform(update)/perform(clean) entry point for all path-qualified
+# exe targets so build2 can attach the operation to them.
+#
+exe{~'/(.+)/'}:
+{{
+  diag import $> $<
+  touch $path($>)
+}}
 
 # Recreate the upstream include/ hierarchy under, e.g., /usr/include/.
 #
