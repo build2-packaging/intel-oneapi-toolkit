@@ -54,8 +54,14 @@ the risk of cherry-picking.
   file{icpx.cfg} bin/icpx.cfg
   file{clang++} bin/clang++ (recreated symlink, Linux-only; see Gotchas below)
 
-The `.exe` extension is omitted from `package.json`. The buildfile assigns it
-on Windows via the `exes` loop (`"$(p).exe"`).
+The `.exe` extension is included explicitly in `package.json` for Windows paths
+(e.g. `icx.exe`, `icpx.exe`). The buildfile uses `exe{$(p)...}` (not `exe{$p}`):
+the trailing `...` in a build2 name pattern prevents the last dot from being
+used as the extension separator, so the full path (including `.exe`) becomes the
+target stem rather than a hard-coded extension. Without it, the Windows-platform
+exe targets declared with `include = false` on Linux would carry `.exe` as a
+target-level extension, causing the test runner to attempt executing
+non-existent `.exe` files on Linux and fail with exec-format errors.
 
 Only `icx`/`icpx` are exposed as targets (not `dpcpp`/`dpcpp-cl`/`opencl-aot`
 or the raw `clang*`/`llvm-*` tools under `bin/compiler/`), mirroring how

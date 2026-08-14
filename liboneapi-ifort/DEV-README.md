@@ -59,8 +59,15 @@ Tarballs extract under `_installdir/compiler/<ver>/` which maps to
   exe{xfortcom} bin/compiler/xfortcom       bin/compiler/xfortcom
   file{ifx.cfg} bin/ifx.cfg                bin/ifx.cfg
 
-The `.exe` extension is omitted from `package.json`. The buildfile assigns it
-on Windows via `exe{*}: extension = exe`.
+The `.exe` extension is included explicitly in `package.json` for Windows paths
+(e.g. `ifx.exe`, `fpp.exe`, `compiler/xfortcom.exe`). The buildfile uses
+`exe{$(p)...}` (not `exe{$p}`): the trailing `...` in a build2 name pattern
+prevents the last dot from being used as the extension separator, so the full
+path (including `.exe`) becomes the target stem rather than a hard-coded
+extension. Without it, the Windows-platform exe targets declared with
+`include = false` on Linux would carry `.exe` as a target-level extension,
+causing the test runner to attempt executing non-existent `.exe` files on Linux
+and fail with exec-format errors.
 
 `libicaf.so` (Coarray Fortran runtime) is not included in `ifort` because it
 has an undeclared dependency on MPI (`libmpi.so.12`). It can be added once MPI

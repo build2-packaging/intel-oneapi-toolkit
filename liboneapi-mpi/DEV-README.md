@@ -64,11 +64,31 @@ Tarballs extract under `_installdir/mpi/<ver>/` which maps to `mpi-devel/` or
   exe{mpiexec}   bin/mpiexec    bin/mpiexec.exe
   exe{impi_info} bin/impi_info  bin/impi_info.exe
 
-The `.exe` extension is omitted from `package.json`. The buildfile assigns it
-on Windows via `$name-runtime/bin/exe{*}: extension = exe`.
+The `.exe` extension is included explicitly in `package.json` for Windows paths
+(e.g. `mpiexec.exe`). The buildfile uses `exe{$(p)...}` (not `exe{$p}`): the
+trailing `...` in a build2 name pattern prevents the last dot from being used
+as the extension separator, so the full path (including `.exe`) becomes the
+target stem rather than a hard-coded extension. Without it, the Windows-platform
+exe targets declared with `include = false` on Linux would carry `.exe` as a
+target-level extension, causing the test runner to attempt executing
+non-existent `.exe` files on Linux and fail with exec-format errors.
 
 Legal files are under `share/doc/mpi/` in the runtime extract (no `licensing/`
 subdirectory, unlike some other oneAPI packages).
+
+## Gotchas found while verifying `bdep test`
+
+- **`impi_info` has a hardcoded absolute RPATH pointing to the Intel installation
+  layout** (e.g. `/opt/intel/oneapi/mpi/.../lib`). After plain `bsdtar` extraction
+  the binary cannot find `libmpi.so` in the build tree and fails to launch.
+  Fix: `patchelf --set-rpath '$ORIGIN/../lib' $path($>)` in the
+  `exe{~'/(.+)/'}:` pattern-rule recipe rewrites the RPATH to a relocatable
+  `$ORIGIN`-relative path so the binary finds `mpi-runtime/lib/` from both the
+  build tree and an install tree. `requires: patchelf ? ($cc.target.class == 'linux')`
+  is declared in the manifest. On Windows the OS loader resolves DLLs from the
+  same directory as the executable, so no RPATH patching is needed there.
+  `impi_info` also declares `"depends": ["mpi"]` in `package.json` so the
+  shared library target is a formal build-graph prerequisite of the exe.
 
 ## Usage
 

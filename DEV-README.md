@@ -6,6 +6,8 @@
   [liboneapi-dpcpp/DEV-README.md](liboneapi-dpcpp/DEV-README.md)                     - DPC++/C++ compiler (icx/icpx), headers
   [liboneapi-mkl/DEV-README.md](liboneapi-mkl/DEV-README.md)                         - MKL targets, layout, platform notes
   [liboneapi-openmp/DEV-README.md](liboneapi-openmp/DEV-README.md)                   - OpenMP targets, layout, platform notes
+  [liboneapi-ifort/DEV-README.md](liboneapi-ifort/DEV-README.md)                     - Fortran compiler (ifx/fpp/xfortcom), runtime libs
+  [liboneapi-mpi/DEV-README.md](liboneapi-mpi/DEV-README.md)                         - MPI targets, layout, exe RPATH notes
   [liboneapi-tbb/DEV-README.md](liboneapi-tbb/DEV-README.md)                         - TBB targets, layout, platform notes
 
 ## Download mechanism
@@ -40,6 +42,8 @@
   openmp              intel.oneapi.lin.compiler.content    intel.oneapi.win.compiler.content
   compilers-common    intel.oneapi.lin.compiler.content     intel.oneapi.win.compiler.content
   dpcpp               intel.oneapi.lin.compiler.content     intel.oneapi.win.compiler.content
+  ifort               intel.oneapi.lin.compiler.content     intel.oneapi.win.compiler.content
+  mpi                 intel.oneapi.lin.mpi_oneapi.content   intel.oneapi.win.mpi_oneapi.content
 
 (*) oneDNN is open source (Apache-2.0). Upstream: https://github.com/uxlfoundation/oneDNN
     Not packaged here; consider building from source rather than wrapping Intel's binary.
@@ -140,6 +144,10 @@ the relevant version+build strings. Update the `version` field in each
   liboneapi-compilers-     intel.oneapi.win.compilers-common           intel.oneapi.lin.compilers-common
     common                 intel.oneapi.win.compilers-common-runtime   intel.oneapi.lin.compilers-common.runtime
   liboneapi-dpcpp          intel.oneapi.win.cpp-dpcpp-common           intel.oneapi.lin.dpcpp-cpp-common
+  liboneapi-ifort          intel.oneapi.win.ifort-compiler             intel.oneapi.lin.ifort-compiler
+                           (devel only, no separate runtime)           (devel only, no separate runtime)
+  liboneapi-mpi            intel.oneapi.win.mpi.devel                  intel.oneapi.lin.mpi.devel
+                           intel.oneapi.win.mpi.runtime                intel.oneapi.lin.mpi.runtime
 
 Note: `compilers-common` uses a hyphen before `runtime` on Windows
 (`compilers-common-runtime`) but a dot on Linux (`compilers-common.runtime`).
