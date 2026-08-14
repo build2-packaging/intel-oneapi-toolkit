@@ -1,35 +1,48 @@
 {
-  "x86_64-windows": {
-    "openmp": {
-      "linked": [
-        { "dll": "openmp-runtime/bin/libiomp5md.dll",      "libs": ["openmp-runtime/lib/libiomp5md.lib"] },
-        { "dll": "openmp-runtime/bin/libiompstubs5md.dll", "libs": ["openmp-runtime/lib/libiompstubs5md.lib"] }
-      ]
+  "platforms":
+  {
+    "x86_64-windows":
+    {
+      "libs":
+      {
+        "openmp": {
+          "linked": [
+            { "dll": "openmp-runtime/bin/libiomp5md.dll",      "libs": ["openmp-runtime/lib/libiomp5md.lib"] },
+            { "dll": "openmp-runtime/bin/libiompstubs5md.dll", "libs": ["openmp-runtime/lib/libiompstubs5md.lib"] }
+          ]
+        },
+        "openmp-omptarget": {
+          "linked": [
+            { "dll": "openmp-runtime/bin/omptarget.dll", "libs": ["openmp-runtime/lib/omptarget.lib"] }
+          ],
+          "shared": [
+            "openmp-runtime/bin/omptarget.sycl.wrap.dll"
+          ],
+          "depends": ["openmp"]
+        }
+      },
+      "exes": {}
     },
-    "openmp-omptarget": {
-      "linked": [
-        { "dll": "openmp-runtime/bin/omptarget.dll", "libs": ["openmp-runtime/lib/omptarget.lib"] }
-      ],
-      "shared": [
-        "openmp-runtime/bin/omptarget.sycl.wrap.dll"
-      ],
-      "depends": ["openmp"]
-    }
-  },
 
-  "x86_64-linux": {
-    "openmp": {
-      "shared": [
-        "openmp-runtime/lib/libiomp5.so",
-        "openmp-runtime/lib/libiompstubs5.so"
-      ]
-    },
-    "openmp-omptarget": {
-      "shared": [
-        "openmp-runtime/lib/libomptarget.so",
-        "openmp-runtime/lib/libomptarget.sycl.wrap.so"
-      ],
-      "depends": ["openmp"]
+    "x86_64-linux":
+    {
+      "libs":
+      {
+        "openmp": {
+          "shared": [
+            "openmp-runtime/lib/libiomp5.so",
+            "openmp-runtime/lib/libiompstubs5.so"
+          ]
+        },
+        "openmp-omptarget": {
+          "shared": [
+            "openmp-runtime/lib/libomptarget.so",
+            "openmp-runtime/lib/libomptarget.sycl.wrap.so"
+          ],
+          "depends": ["openmp"]
+        }
+      },
+      "exes": {}
     }
   }
 }
