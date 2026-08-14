@@ -33,7 +33,7 @@ json{~'/(.+-manifest.*)/'}:
     | set comp [string]
 
   cat $path($manifest) \
-    | sed -n -e 's/^version:\s*(.*).*$/\1/p' \
+    | sed -n -e 's/^upstream-version:\s*(.*).*$/\1/p' \
     | set version [string]
   version = [string] $regex.apply($version, '([0-9]+\.[0-9]+\.[0-9]+).*', '\1')
 

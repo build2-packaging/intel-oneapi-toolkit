@@ -21,7 +21,7 @@ To start using `liboneapi-tbb` in your project, add the following `depends`
 value to your `manifest`, adjusting the version constraint as appropriate:
 
 ```
-depends: liboneapi-tbb ^2023.0.0
+depends: liboneapi-tbb ^2026.0.0
 ```
 
 Then import the library in your `buildfile`:

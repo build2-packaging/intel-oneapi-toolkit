@@ -1,6 +1,6 @@
 : 1
 name: liboneapi-mpi
-version: 2021.18.0
+version: 2026.0.0
 upstream-version: 2021.18.0
 language: c++
 project: intel-oneapi-toolkit

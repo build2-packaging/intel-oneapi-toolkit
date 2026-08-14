@@ -13,4 +13,7 @@ package-email: packaging@build2.org ; Mailing list.
 builds: none; Times out downloading large binaries
 depends: * build2 >= 0.18.0
 depends: * bpkg >= 0.18.0
-depends: liboneapi-compilers-common ^ 2026.0.0
+depends: \
+{ \
+  liboneapi-compilers-common \
+} == $
