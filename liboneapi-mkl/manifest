@@ -1,6 +1,6 @@
 : 1
 name: liboneapi-mkl
-version: 2026.0.0
+version: 2026.0.0+1
 upstream-version: 2026.0.0
 language: c++
 project: intel-oneapi-toolkit
