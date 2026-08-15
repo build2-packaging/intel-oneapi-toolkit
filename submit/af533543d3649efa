@@ -1,0 +1,9 @@
+: 1
+name: liboneapi-dpcpp
+version: 2026.0.0+1
+upstream-version: 2026.0.0
+language: c++
+project: intel-oneapi-toolkit
+summary: Intel DPC++/C++ Compiler (icx/icpx) and headers
+license: other: Intel End User License Agreement for Developer Tools; Not\
+ free/open source.

@@ -1,0 +1,9 @@
+: 1
+name: liboneapi-ifort
+version: 2026.0.0+1
+upstream-version: 2026.0.0
+language: c++
+project: intel-oneapi-toolkit
+summary: Intel Fortran Compiler (ifx) and Fortran runtime libraries
+license: other: Intel End User License Agreement for Developer Tools; Not\
+ free/open source.

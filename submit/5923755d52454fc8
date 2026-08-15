@@ -1,0 +1,9 @@
+: 1
+name: liboneapi-openmp
+version: 2026.0.0+1
+upstream-version: 2026.0.0
+language: c++
+project: intel-oneapi-toolkit
+summary: Intel OpenMP 5.x runtime (libiomp5) and offload target library
+license: other: Intel End User License Agreement for Developer Tools; Not\
+ free/open source.

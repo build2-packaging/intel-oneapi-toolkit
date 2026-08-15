@@ -1,0 +1,9 @@
+: 1
+name: liboneapi-mpi
+version: 2026.0.0+1
+upstream-version: 2021.18.0
+language: c++
+project: intel-oneapi-toolkit
+summary: Intel oneAPI MPI Library (message-passing interface)
+license: other: Intel End User License Agreement for Developer Tools; Not\
+ free/open source.

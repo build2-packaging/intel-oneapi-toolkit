@@ -1,0 +1,8 @@
+: 1
+name: liboneapi-mkl
+version: 2026.0.0+1
+upstream-version: 2026.0.0
+language: c++
+project: intel-oneapi-toolkit
+summary: Intel oneAPI Math Kernel Library (BLAS, LAPACK, FFT, VML)
+license: other: Intel Simplified Software License; Not free/open source.
